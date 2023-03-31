@@ -84,6 +84,14 @@ class PaymentItem {
   /// The status of the price, either [unknown], [pending] or [final_price].
   final PaymentItemStatus status;
 
+  /// The amount of time – in calendar units such as day, month, or year – that represents a fraction of the total payment interval. For example, if you set the intervalUnit to 'month' and intervalCount to 3, then the payment interval is three months.
+  final IntervalUnit intervalUnit;
+
+  /// The number of interval units that make up the total payment interval. For example, if you set the intervalUnit to 'month' and intervalCount to 3, then the payment interval is three months.
+  final int intervalCount;
+
+  final bool recurring;
+
   /// Creates a new payment item with the specified parameters, defaulting to
   /// a [total] [type], and an [unknown] [status].
   const PaymentItem({
@@ -91,6 +99,9 @@ class PaymentItem {
     this.label,
     this.type = PaymentItemType.total,
     this.status = PaymentItemStatus.unknown,
+    this.recurring = false,
+    this.intervalUnit = IntervalUnit.month,
+    this.intervalCount = 1,
   });
 
   /// Creates a map representation of the object.
@@ -99,5 +110,21 @@ class PaymentItem {
         'amount': amount,
         'type': type.toSimpleString(),
         'status': status.toSimpleString(),
+        'recurring': recurring,
+        'intervalUnit': intervalUnit.toSimpleString(),
+        'intervalCount': intervalCount,
       };
+}
+
+enum IntervalUnit { minute, hour, day, month, year }
+
+extension on IntervalUnit {
+  /// Creates a string representation of the [PaymentItemStatus] enumeration.
+  String toSimpleString() => {
+        IntervalUnit.minute: 'minute',
+        IntervalUnit.hour: 'hour',
+        IntervalUnit.day: 'day',
+        IntervalUnit.month: 'month',
+        IntervalUnit.year: 'year',
+      }[this]!;
 }
